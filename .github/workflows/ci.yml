@@ -30,7 +30,7 @@ jobs:
       - run: echo "github.repository ${{ github.repository }}"
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - run: echo "github.workspace ${{ github.workspace }}"
 
       - name: Set up CMake
