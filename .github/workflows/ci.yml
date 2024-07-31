@@ -1,4 +1,4 @@
-name: Build-Release
+name: Build and Test
 run-name: ${{ github.actor }} is running Build-Release 🚀
 
 on:
@@ -11,12 +11,18 @@ on:
 
 env:
   CMAKE_VERSION: 3.21.1
-  BUILD_TYPE: Release
   BUILD_DIR: ${{ github.workspace }}/build
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+
+    env:
+      BUILD_TYPE: ${{ matrix.build_type }}
+
     steps:
       - run: echo "github.event_name ${{ github.event_name }}"
       - run: echo "runner.os  ${{ runner.os }} "
@@ -45,4 +51,3 @@ jobs:
 
       - name: Run unit tests
         run: ctest --test-dir ${{ env.BUILD_DIR }} --output-on-failure
-    
