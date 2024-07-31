@@ -1,0 +1,41 @@
+name: Build-Release
+run-name: ${{ github.actor }} is running Build-Release 🚀
+
+on: 
+  push:
+    branches:
+      - main
+      - develope
+  pull_request:
+    branches:
+      - main
+      - develope
+
+env:
+  CMAKE_VERSION: 3.21.1
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up CMake
+      uses: lukka/get-cmake@v${{ env.CMAKE_VERSION }}
+
+    - name: Set up dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++
+
+    - name: CMake configure
+      run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -B ${{ github.workspace }}/build -S .
+
+    - name: CMake build
+      run: cmake --build ${{ github.workspace }}/build --config ${{ env.BUILD_TYPE }}
+
+    - name: Run tests with CTest
+      run: ctest --test-dir build
