@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(cicd LANGUAGES CXX)
 
 
-set(ENABLE_TESTING ON CACHE BOOL "Enable testing")
-set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage")
+# set(ENABLE_TESTING ON CACHE BOOL "Enable testing")
+# set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage")
 
 if(ENABLE_COVERAGE)
     include(cmake/coverage.cmake)
