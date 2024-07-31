@@ -32,7 +32,7 @@ jobs:
       - name: Set up runner environment
         run: | 
           module --force purge
-          module load StdEnv/2023
+          module load StdEnv/2020
           module load cmake/3.21.4
           module load gcc/9.3.0
 
