@@ -57,9 +57,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build_artifacts
+          path: ${{ env.BUILD_DIR }}
 
       - name: do ls
         run: ls ${{ github.workspace }}
 
       - name: Run unit tests
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir ${{ env.BUILD_DIR }} --output-on-failure
