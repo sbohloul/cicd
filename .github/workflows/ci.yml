@@ -1,7 +1,7 @@
 name: Build-Release
 run-name: ${{ github.actor }} is running Build-Release 🚀
 
-on: 
+on:
   push:
     branches:
       - main
@@ -17,7 +17,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - run: echo "github.event_name ${{ github.event_name }}"
       - run: echo "runner.os  ${{ runner.os }} "
@@ -43,11 +42,20 @@ jobs:
 
       - name: CMake build step
         run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }}
-    
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.BUILD_DIR }}
+
   test:
     runs-on: ubuntu-latest
     needs: build
-
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.BUILD_DIR }}
+
       - name: Run unit tests
         run: ctest --test-dir ${{ env.BUILD_DIR }}
