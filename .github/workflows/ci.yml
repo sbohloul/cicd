@@ -29,19 +29,26 @@ jobs:
       - run: echo "github.ref ${{ github.ref }}"
       - run: echo "github.repository ${{ github.repository }}"
 
+      - name: Set up runner environment
+        run: | 
+          module --force purge
+          module load StdEnv/2023
+          module load cmake/3.21.4
+          module load gcc/9.3.0
+
       - name: Checkout code
         uses: actions/checkout@v3
       - run: echo "github.workspace ${{ github.workspace }}"
 
-      - name: Set up CMake
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: ${{ env.CMAKE_VERSION }}
+      # - name: Set up CMake
+      #   uses: lukka/get-cmake@latest
+      #   with:
+      #     cmakeVersion: ${{ env.CMAKE_VERSION }}
 
-      - name: Set up dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y g++
+      # - name: Set up dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y g++
 
       - name: CMake configure step
         run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -B ${{ env.BUILD_DIR }} -S .
