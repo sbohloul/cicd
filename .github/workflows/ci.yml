@@ -47,6 +47,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.BUILD_DIR }}
+          path: ${{ env.BUILD_DIR }}
 
   test:
     runs-on: ubuntu-latest
