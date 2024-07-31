@@ -1,5 +1,5 @@
 name: Build and Test
-run-name: ${{ github.actor }} is running Build-Release 🚀
+run-name: ${{ github.actor }} is running Build and Test 🚀
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
       - name: Set up CMake
         uses: lukka/get-cmake@latest
         with:
-          cmake-version: ${{ env.CMAKE_VERSION }}
+          cmakeVersion: ${{ env.CMAKE_VERSION }}
 
       - name: Set up dependencies
         run: |
