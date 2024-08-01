@@ -2,9 +2,9 @@ name: LCOV-RERPORTER
 run-name: ${{ github.actor }} is running LCOV-RERPORTER 🚀
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   pull_request:
     branches:
       - main
@@ -52,6 +52,17 @@ jobs:
 
   lcov-reporter:
     needs: build-and-test
-    uses: romeovs/lcov-reporter-action@v0.3.1
-    with:
-      lcov-file: ${{ needs.build-and-test.outputs.BUILD_DIR }}/coverage.info
+
+    steps:
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+
+      - name: ls
+        run: ls -l
+
+      - name: LCOV Reporter
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: coverage.info
