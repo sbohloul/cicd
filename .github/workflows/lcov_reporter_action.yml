@@ -14,11 +14,10 @@ env:
   CMAKE_VERSION: 3.21.4
   BUILD_DIR: ${{ github.workspace }}/build
   BUILD_TYPE: Debug
-  GCC_VERSION: 9.3.0
 
 jobs:
   build-and-test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Print GitHub context
@@ -29,13 +28,14 @@ jobs:
           echo "GitHub Repository: ${{ github.repository }}"
           echo "Workspace: ${{ github.workspace }}"
 
-      - name: Set up runner environment
-        run: | 
-          module --force purge
-          module load StdEnv/2020
-          module load cmake/${{ env.CMAKE_VERSION }}
-          module load gcc/${{ env.GCC_VERSION }}
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ lcov
 
+      - name: Set up CMake
+        uses: lukka/get-cmake@${{ env.CMAKE_VERSION }}          
+      
       - name: Checkout code
         uses: actions/checkout@v2
 
