@@ -1,0 +1,57 @@
+name: LCOV-RERPORTER
+run-name: ${{ github.actor }} is running LCOV-RERPORTER 🚀
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  CMAKE_VERSION: 3.21.4
+  BUILD_DIR: ${{ github.workspace }}/build
+  BUILD_TYPE: Debug
+  GCC_VERSION: 9.3.0
+
+jobs:
+  build-and-test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "GitHub Event: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "Workspace: ${{ github.workspace }}"
+
+      - name: Set up runner environment
+        run: | 
+          module --force purge
+          module load StdEnv/2020
+          module load cmake/${{ env.CMAKE_VERSION }}
+          module load gcc/${{ env.GCC_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON -B ${{ env.BUILD_DIR }} -S .
+
+      - name: Build with CMake
+        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: ${{ env.BUILD_DIR }}/coverage.info
+
+  lcov-reporter:
+    needs: build-and-test
+    uses: romeovs/lcov-reporter-action@v0.3.1
+    with:
+      lcov-file: ${{ needs.build-and-test.outputs.BUILD_DIR }}/coverage.info
