@@ -2,9 +2,10 @@ name: LCOV-RERPORTER
 run-name: ${{ github.actor }} is running LCOV-RERPORTER 🚀
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
+      - '**'
   pull_request:
     branches:
       - main
@@ -51,6 +52,7 @@ jobs:
           path: ${{ env.BUILD_DIR }}/coverage.info
 
   lcov-reporter:
+    runs-on: self-hosted
     needs: build-and-test
 
     steps:
