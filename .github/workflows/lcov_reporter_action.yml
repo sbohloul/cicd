@@ -3,9 +3,9 @@ run-name: ${{ github.actor }} is running LCOV-RERPORTER 🚀
 
 on:
   push:
-    branches:
-      - main
-      - '**'
+    # branches:
+    #   - main
+    #   - '**'
   pull_request:
     branches:
       - main
@@ -54,19 +54,25 @@ jobs:
           path: ${{ env.BUILD_DIR }}/coverage.info
 
   lcov-reporter:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: build-and-test
 
     steps:
+      - name: ls -l
+        run: ls -l
+
       - name: Download coverage report
         uses: actions/download-artifact@v2
         with:
-          name: coverage
+          name: coverage          
 
       - name: ls
         run: ls -l
 
-      - name: LCOV Reporter
-        uses: romeovs/lcov-reporter-action@v0.3.1
-        with:
-          lcov-file: coverage.info
+      - name: cat coverage.info
+        run: cat coverage.info
+
+      # - name: LCOV Reporter
+      #   uses: romeovs/lcov-reporter-action@v0.3.1
+      #   with:
+      #     lcov-file: coverage.info
