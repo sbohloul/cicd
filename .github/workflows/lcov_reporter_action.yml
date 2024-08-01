@@ -73,8 +73,13 @@ jobs:
       - name: cat coverage.info
         run: cat coverage.info
 
-      - name: LCOV Reporter
-        uses: romeovs/lcov-reporter-action@v0.3.1
+      # - name: LCOV Reporter
+      #   uses: romeovs/lcov-reporter-action@v0.3.1
+      #   with:
+      #     lcov-file: coverage.info
+      #     github-token: ${{ secrets.CODE_COVERAGE_TOKEN }}
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          lcov-file: coverage.info
-          github-token: ${{ secrets.CODE_COVERAGE_TOKEN }}
+          filename: coverage.info
