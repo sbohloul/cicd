@@ -76,7 +76,8 @@ jobs:
       - name: Download coverage report
         uses: actions/download-artifact@v2
         with:
-          name: coverage-html        
+          name: coverage-html
+          path: coverage_html        
 
 
       - name: ls
@@ -105,6 +106,7 @@ jobs:
             $(lcov --summary coverage.info)
             ```
             [View detailed report](./coverage_html/index.html)
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy coverage report to GitHub Pages
         if: github.event_name == 'push'
