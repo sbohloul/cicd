@@ -139,4 +139,6 @@ jobs:
         id: html_preview
         uses: pavi2410/html-preview-action@v2
         with:
-          html_file: '${{ env.BUILD_DIR }}/coverage_html/index.html'
+          html_file: ${{ env.BUILD_DIR }}/coverage_html/index.html
+        # run: echo "::set-output name=url::https://${{ github.repository_owner }}.github.io/${{ github.repository }}/index.html"
+
