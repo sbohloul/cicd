@@ -21,4 +21,8 @@ namespace math {
         }
         return a / b;
     }
+
+    int add_dummy() {
+        return 0;
+    }
 }
