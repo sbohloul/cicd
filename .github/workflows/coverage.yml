@@ -32,7 +32,7 @@ jobs:
       - name: Set up dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++ lcov gcovr genhtml
+          sudo apt-get install -y g++ lcov
       
       - name: Set up CMake
         uses: lukka/get-cmake@latest
@@ -77,7 +77,7 @@ jobs:
       - name: Set up dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++ lcov gcovr genhtml
+          sudo apt-get install -y g++ lcov
       
       - name: Set up CMake
         uses: lukka/get-cmake@latest
