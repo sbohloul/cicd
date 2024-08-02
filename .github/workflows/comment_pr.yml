@@ -21,5 +21,4 @@ jobs:
           message: |
             Hello! This is a comment from a GitHub Action.
             This is a multiline comment.
-          repo-token: ${{ env.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.number }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}          
