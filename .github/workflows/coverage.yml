@@ -97,8 +97,8 @@ jobs:
         run: |
           lcov --list ${{ env.BUILD_DIR }}/coverage.info > coverage_list.txt
           lcov --summary ${{ env.BUILD_DIR }}/coverage.info > coverage_summary.txt
-          echo "COVERAGE_SUMMARY=$(cat coverage_summary.txt)" >> $GITHUB_ENV
-          echo "COVERAGE_LIST=$(cat coverage_list.txt)" >> $GITHUB_ENV
+          echo "COVERAGE_SUMMARY=$(base64 -w 0 coverage_summary.txt)" >> $GITHUB_ENV
+          echo "COVERAGE_LIST=$(base64 -w 0 coverage_list.txt)" >> $GITHUB_ENV
       
       - name: Get coverage values
         run: |
