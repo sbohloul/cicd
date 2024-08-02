@@ -146,7 +146,7 @@ jobs:
         uses: hrishikesh-kadam/setup-lcov@v1
 
       - name: Reprot code coverage
-        uses: hrishikesh-kadam/setup-lcov@v1
+        uses: zgosalvez/github-actions-report-lcov@v3
         with:
           coverage-files: coverage*.info
           minimum-coverage: 90
