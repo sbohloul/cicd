@@ -1,0 +1,25 @@
+name: comment-pr
+run-name: ${{ github.actor }} is running ${{ github.workflow }} 🚀
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  BUILD_DIR: ${{ github.workspace }}/build
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            Hello! This is a comment from a GitHub Action.
+            This is a multiline comment.
+          repo-token: ${{ env.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.number }}
