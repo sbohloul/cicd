@@ -110,10 +110,14 @@ jobs:
       - name: ls -l
         run: ls -l
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
+          path: ${{ env.BUILD_DIR }}
 
       - name: ls
         run: ls -l
@@ -124,7 +128,7 @@ jobs:
       - name: Reprot code coverage
         uses: zgosalvez/github-actions-report-lcov@v3
         with:
-          coverage-files: coverage.info
+          coverage-files: ${{ env.BUILD_DIR }}/coverage.info
           minimum-coverage: 90
           artifact-name: code-coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
