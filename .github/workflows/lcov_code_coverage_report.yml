@@ -92,6 +92,7 @@ jobs:
         uses: romeovs/lcov-reporter-action@v0.2.16
         with:
           lcov-file: ./coverage.info
+          github-token: ${{ secrets.CODE_COVERAGE_TOKEN }}
 
       # - name: LCOV Reporter
       #   uses: romeovs/lcov-reporter-action@v0.3.1
