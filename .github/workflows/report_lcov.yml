@@ -51,62 +51,56 @@ jobs:
       - name: Build with CMake
         run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
 
-      - name: Upload coverage report
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-info
-          path: ${{ env.BUILD_DIR }}/coverage.info
+          name: build-artifacts
+          path: ${{ env.BUILD_DIR }}
       
-      - name: Upload coverage html report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-html
-          path: ${{ env.BUILD_DIR }}/coverage_html
+  # generate-coverage-base:
+  #   runs-on: ubuntu-latest
 
-  generate-coverage-base:
-    runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Print GitHub context
+  #       run: |
+  #         echo "GitHub Event: ${{ github.event_name }}"
+  #         echo "Runner OS: ${{ runner.os }}"
+  #         echo "GitHub Ref: ${{ github.ref }}"
+  #         echo "GitHub Repository: ${{ github.repository }}"
+  #         echo "Workspace: ${{ github.workspace }}"
 
-    steps:
-      - name: Print GitHub context
-        run: |
-          echo "GitHub Event: ${{ github.event_name }}"
-          echo "Runner OS: ${{ runner.os }}"
-          echo "GitHub Ref: ${{ github.ref }}"
-          echo "GitHub Repository: ${{ github.repository }}"
-          echo "Workspace: ${{ github.workspace }}"
+  #     - name: Set up dependencies
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install -y g++ lcov
 
-      - name: Set up dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y g++ lcov
-
-      - name: Set up CMake
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: ${{ env.CMAKE_VERSION }}        
+  #     - name: Set up CMake
+  #       uses: lukka/get-cmake@latest
+  #       with:
+  #         cmakeVersion: ${{ env.CMAKE_VERSION }}        
       
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: main
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: main
 
-      - name: Configure CMake
-        run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON -B ${{ env.BUILD_DIR }} -S .
+  #     - name: Configure CMake
+  #       run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON -B ${{ env.BUILD_DIR }} -S .
 
-      - name: Build with CMake
-        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
+  #     - name: Build with CMake
+  #       run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-info-base
-          path: ${{ env.BUILD_DIR }}/coverage.info
+  #     - name: Upload coverage report
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: coverage-info-base
+  #         path: ${{ env.BUILD_DIR }}/coverage.info
       
-      - name: Upload coverage html report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-html-base
-          path: ${{ env.BUILD_DIR }}/coverage_html
+  #     - name: Upload coverage html report
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: coverage-html-base
+  #         path: ${{ env.BUILD_DIR }}/coverage_html
     
   generate-report:
     runs-on: ubuntu-latest
@@ -116,28 +110,10 @@ jobs:
       - name: ls -l
         run: ls -l
 
-      - name: Download coverage info
+      - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: coverage-info      
-
-      - name: Download coverage report
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-html
-          path: coverage_html   
-
-      - name: Download coverage info base
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-info-base
-          path: coverage_base.info      
-
-      - name: Download coverage report
-        uses: actions/download-artifact@v2
-        with:
-          name: coverage-html-base
-          path: coverage_html_base   
+          name: build-artifacts
 
       - name: ls
         run: ls -l
