@@ -1,0 +1,145 @@
+name: code-coverage-report
+run-name: ${{ github.actor }} is running ${{ github.workflow }} 🚀
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  pull-requests: write
+  contents: read
+
+env:
+  CMAKE_VERSION: 3.21.4
+  BUILD_DIR: ${{ github.workspace }}/build
+  BUILD_TYPE: Debug
+  REFERENCE_BRANCH: main
+
+jobs:
+  generate-reference-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "GitHub Event: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "Workspace: ${{ github.workspace }}"
+      
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ lcov gcovr genhtml
+      
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ${{ env.CMAKE_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ env.REFERENCE_BRANCH }}
+
+      - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON -B ${{ env.BUILD_DIR }} -S .
+
+      - name: Build with CMake
+        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
+      
+      - name: Extract coverage info
+        run: |
+          lcov --list coverage.info > coverage_list.txt
+          lcov --summary coverage.info > coverage_summary.txt
+      
+      - name: Get coverage threshold values
+        run: |
+          lines_coverage=$(grep -Po 'lines\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "MIN_LINES_COVERAGE=${lines_coverage}" >> $GITHUB_ENV
+          functions_coverage=$(grep -Po 'functions\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "MIN_FUNCTIONS_COVERAGE=${functions_coverage}" >> $GITHUB_ENV
+
+  generate-current-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "GitHub Event: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "Workspace: ${{ github.workspace }}"
+      
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ lcov gcovr genhtml
+      
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ${{ env.CMAKE_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON -B ${{ env.BUILD_DIR }} -S .
+
+      - name: Build with CMake
+        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
+      
+      - name: Extract coverage info
+        run: |
+          lcov --list coverage.info > coverage_list.txt
+          lcov --summary coverage.info > coverage_summary.txt
+          echo "COVERAGE_SUMMARY=$(cat coverage_summary.txt)" >> $GITHUB_ENV
+          echo "COVERAGE_LIST=$(cat coverage_list.txt)" >> $GITHUB_ENV
+      
+      - name: Get coverage values
+        run: |
+          lines_coverage=$(grep -Po 'lines\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "LINES_COVERAGE=${lines_coverage}" >> $GITHUB_ENV
+          functions_coverage=$(grep -Po 'functions\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "FUNCTIONS_COVERAGE=${functions_coverage}" >> $GITHUB_ENV
+
+  report-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "GitHub Event: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "Workspace: ${{ github.workspace }}"
+      
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Post coverage report
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Coverage Report
+          message: |
+            **Coverage report of commit ${{ env.COMMIT_SHA }} during ${{ github.event.pull_request.head.ref }} #${{ github.run_number }}**
+            
+            **Coverage Summary:**
+            ```
+            ${{ env.COVERAGE_SUMMARY }}
+            ```
+
+            **Coverage Details:**
+            ```
+            ${{ env.COVERAGE_LIST }}
+            ```
+          
+            Lines Coverage: ${{ env.LINES_COVERAGE }}
+            Functions Coverage: ${{ env.FUNCTIONS_COVERAGE }}
+            Minimum Lines Coverage: ${{ env.MIN_LINES_COVERAGE }}
+            Minimum Functions Coverage: ${{ env.MIN_FUNCTIONS_COVERAGE }}
