@@ -109,6 +109,7 @@ jobs:
 
   report-coverage:
     runs-on: ubuntu-latest
+    needs: [generate-reference-coverage, generate-current-coverage]
 
     steps:
       - name: Print GitHub context
