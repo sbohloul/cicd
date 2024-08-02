@@ -52,8 +52,8 @@ jobs:
       
       - name: Extract coverage info
         run: |
-          lcov --list coverage.info > coverage_list.txt
-          lcov --summary coverage.info > coverage_summary.txt
+          lcov --list ${{ env.BUILD_DIR }}/coverage.info > coverage_list.txt
+          lcov --summary ${{ env.BUILD_DIR }}/coverage.info > coverage_summary.txt
       
       - name: Get coverage threshold values
         run: |
@@ -95,8 +95,8 @@ jobs:
       
       - name: Extract coverage info
         run: |
-          lcov --list coverage.info > coverage_list.txt
-          lcov --summary coverage.info > coverage_summary.txt
+          lcov --list ${{ env.BUILD_DIR }}/coverage.info > coverage_list.txt
+          lcov --summary ${{ env.BUILD_DIR }}/coverage.info > coverage_summary.txt
           echo "COVERAGE_SUMMARY=$(cat coverage_summary.txt)" >> $GITHUB_ENV
           echo "COVERAGE_LIST=$(cat coverage_list.txt)" >> $GITHUB_ENV
       
