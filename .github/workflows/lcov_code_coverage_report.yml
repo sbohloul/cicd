@@ -16,6 +16,9 @@ env:
   BUILD_DIR: ${{ github.workspace }}/build
   BUILD_TYPE: Debug
 
+permissions:
+  pull-requests: write
+
 # permissions:
 #   pull-requests: write  
 
