@@ -134,3 +134,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: ${{ github.workspace }}
           update-comment: true
+      
+      - name: html viewer
+        id: html_preview
+        uses: pavi2410/html-preview-action@v2
+        with:
+          html_file: '${{ env.BUILD_DIR }}/coverage_html/index.html'
