@@ -72,19 +72,22 @@ jobs:
           lcov --list ${{ env.BUILD_DIR }}/coverage.info > coverage_list.txt
           lcov --summary ${{ env.BUILD_DIR }}/coverage.info > coverage_summary.txt
 
-      - id: get-coverage-values
+      - name: Get coverage values
+        id: get-coverage-values
         run: |
           lines_coverage=$(grep -Po 'lines\.*:\s*\K\d+\.\d+' coverage_summary.txt)
           echo "::set-output name=lines_coverage::${lines_coverage}"
           functions_coverage=$(grep -Po 'functions\.*:\s*\K\d+\.\d+' coverage_summary.txt)
           echo "::set-output name=functions_coverage::${functions_coverage}"
 
-      - id: read-summary
+      - name: Output lcov summary
+        id: read-summary
         run: |
           summary=$(<coverage_summary.txt)
           echo "::set-output name=coverage_summary::${summary}"
 
-      - id: read-list
+      - name: Output lcov list
+        id: read-list
         run: |
           list=$(<coverage_list.txt)
           echo "::set-output name=coverage_list::${list}"
