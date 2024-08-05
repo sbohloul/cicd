@@ -84,11 +84,10 @@ jobs:
       - name: Output lcov summary
         id: read-summary
         run: |          
-          echo "coverage_summary=$(cat coverage_summary.txt}" >> $GITHUB_OUTPUT
+          echo "coverage_summary=$(cat coverage_summary.txt)" >> $GITHUB_OUTPUT
 
       - name: Output lcov list
         id: read-list
         run: |
-          list=$(cat coverage_list.txt)
-          echo "coverage_list==${list}" >> $GITHUB_OUTPUT
+          echo "coverage_list==$(coverage_list.txt)" >> $GITHUB_OUTPUT
 
