@@ -11,14 +11,19 @@ on:
     outputs:
       lines_coverage:
         description: 'Lines coverage percentage'
+        value: ${{ job.outputs.lines_coverage }}
       functions_coverage:
         description: 'Functions coverage percentage'
+        value: ${{ job.outputs.functions_coverage }}
       branches_coverage:
         description: 'Branches coverage percentage'
+        value: ${{ jobs.outputs.branches_coverage }}
       coverage_summary:
         description: 'Coverage summary'
+        value: ${{ jobs.outputs.coverage_summary }}
       coverage_list:
         description: 'Coverage list'
+        value: ${{ jobs.outputs.coverage_list }}
 
 env:
   CMAKE_VERSION: 3.21.4
