@@ -1,0 +1,19 @@
+name: test-coverage
+run-name: ${{ github.actor }} is running ${{ github.workflow }} 🚀
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-coverage-main:
+    uses: ./.github/workflows/build_coverage.yml
+    with:
+      branch: main
+  
+  build-coverage-current:
+    uses: ./.github/workflows/build_coverage.yml
+    with:
+      branch: ${{ github.refname }}
+

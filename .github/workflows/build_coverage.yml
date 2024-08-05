@@ -1,0 +1,49 @@
+name: build-coverage
+run-name: ${{ github.actor }} is running ${{ github.workflow }} 🚀
+
+on:
+  workflow_call:
+    inputs:
+      branches:
+        type: string
+        required: true
+        description: 'Branch for which to generate coverage report'
+
+env:
+  CMAKE_VERSION: 3.21.4
+  BUILD_DIR: ${{ github.workspace }}/build
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "GitHub Event: ${{ github.event_name }}"
+          echo "Runner OS: ${{ runner.os }}"
+          echo "GitHub Ref: ${{ github.ref }}"
+          echo "GitHub Repository: ${{ github.repository }}"
+          echo "Workspace: ${{ github.workspace }}"
+
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ lcov
+
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ${{ env.CMAKE_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_TESTING=ON -DENABLE_COVERAGE=ON -B ${{ env.BUILD_DIR }} -S .
+      
+      - name: Build with CMake
+        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
