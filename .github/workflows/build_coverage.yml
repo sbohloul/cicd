@@ -17,10 +17,10 @@ on:
         value: ${{ jobs.build.outputs.functions_coverage }}
       coverage_summary:
         description: 'Coverage summary'
-        value: "${{ jobs.build.outputs.coverage_summary }}"
+        value: ${{ jobs.build.outputs.coverage_summary }}
       coverage_list:
         description: 'Coverage list'
-        value: "${{ jobs.build.outputs.coverage_list }}"
+        value: ${{ jobs.build.outputs.coverage_list }}
 
 env:
   CMAKE_VERSION: 3.21.4
@@ -84,12 +84,18 @@ jobs:
       - name: Output lcov summary
         id: read-summary
         run: |
-          summary=$(cat coverage_summary.txt)      
-          echo "coverage_summary=${summary}" >> $GITHUB_OUTPUT
-
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          summary=$(cat coverage_summary.txt)
+          echo "coverage_summary<<$EOF" >> $GITHUB_OUTPUT
+          echo "$summary" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+          
       - name: Output lcov list
         id: read-list
-        run: |
+        run: |        
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           list=$(cat coverage_list.txt)
-          echo "coverage_list=="${list}"" >> $GITHUB_OUTPUT
+          echo "coverage_list<<$EOF" >> $GITHUB_OUTPUT
+          echo "$list" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
 
