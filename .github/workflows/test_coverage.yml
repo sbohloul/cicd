@@ -39,7 +39,7 @@ jobs:
       - name: Summary comparison
         run: |
           echo "Summary comparison"
-          echo "Main branch: ${{ needs.build-coverage-main.outputs.coverage_summary }}"
+          echo -e "Main branch: "${{ needs.build-coverage-main.outputs.coverage_summary }}""
           echo "Current branch: ${{ needs.build-coverage-current.outputs.coverage_summary }}"
 
       - name: List comparison
