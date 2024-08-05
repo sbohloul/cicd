@@ -4,7 +4,7 @@ run-name: ${{ github.actor }} is running ${{ github.workflow }} 🚀
 on:
   workflow_call:
     inputs:
-      branches:
+      branch:
         type: string
         required: true
         description: 'Branch for which to generate coverage report'
