@@ -11,7 +11,7 @@ on:
     outputs:
       lines_coverage:
         description: 'Lines coverage percentage'
-        value: ${{ jobs.outputs.lines_coverage }}
+        value: "xxxx"
       functions_coverage:
         description: 'Functions coverage percentage'
         value: ${{ jobs.outputs.functions_coverage }}
