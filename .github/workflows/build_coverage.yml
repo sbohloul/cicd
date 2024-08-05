@@ -11,10 +11,10 @@ on:
     outputs:
       lines_coverage:
         description: 'Lines coverage percentage'
-        value: ${{ job.outputs.lines_coverage }}
+        value: ${{ jobs.outputs.lines_coverage }}
       functions_coverage:
         description: 'Functions coverage percentage'
-        value: ${{ job.outputs.functions_coverage }}
+        value: ${{ jobs.outputs.functions_coverage }}
       branches_coverage:
         description: 'Branches coverage percentage'
         value: ${{ jobs.outputs.branches_coverage }}
