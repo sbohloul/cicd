@@ -79,17 +79,17 @@ jobs:
           lines_coverage="111"
           echo "lines_coverage=${lines_coverage}" >> $GITHUB_OUTPUT
           functions_coverage=$(grep -Po 'functions\.*:\s*\K\d+\.\d+' coverage_summary.txt)
-          echo "::set-output name=functions_coverage::${functions_coverage}"
+          echo "functions_coverage=${functions_coverage}" >> $GITHUB_OUTPUT
 
       - name: Output lcov summary
         id: read-summary
         run: |
-          summary=$(<coverage_summary.txt)
-          echo "::set-output name=coverage_summary::${summary}"
+          summary=$(cat coverage_summary.txt)
+          echo "coverage_summary=${summary}" >> $GITHUB_OUTPUT
 
       - name: Output lcov list
         id: read-list
         run: |
-          list=$(<coverage_list.txt)
-          echo "::set-output name=coverage_list::${list}"
+          list=$(cat coverage_list.txt)
+          echo "coverage_list==${list}" >> $GITHUB_OUTPUT
 
