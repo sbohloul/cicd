@@ -8,6 +8,22 @@ on:
         type: string
         required: true
         description: 'Branch for which to generate coverage report'
+    outputs:
+      lines_coverage:
+        type: string
+        description: 'Lines coverage percentage'
+      functions_coverage:
+        type: string
+        description: 'Functions coverage percentage'
+      branches_coverage:
+        type: string
+        description: 'Branches coverage percentage'
+      coverage_summary:
+        type: string
+        description: 'Coverage summary'
+      coverage_list:
+        type: string
+        description: 'Coverage list'
 
 env:
   CMAKE_VERSION: 3.21.4
@@ -17,6 +33,13 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    outputs:
+      lines_coverage: ${{ steps.get-coverage-values.outputs.lines_coverage }}
+      functions_coverage: ${{ steps.get-coverage-values.outputs.functions_coverage }}
+      branches_coverage: ${{ steps.get-coverage-values.outputs.branches_coverage }}
+      coverage_summary: ${{ steps.read-summary.outputs.coverage_summary }}
+      coverage_list: ${{ steps.read-list.outputs.coverage_list }}
 
     steps:
       - name: Print GitHub context
@@ -47,3 +70,28 @@ jobs:
       
       - name: Build with CMake
         run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }} --target coverage
+
+      - name: Extract coverage info
+        run: |
+          lcov --list ${{ env.BUILD_DIR }}/coverage.info > coverage_list.txt
+          lcov --summary ${{ env.BUILD_DIR }}/coverage.info > coverage_summary.txt
+
+      - id: get-coverage-values
+        run: |
+          lines_coverage=$(grep -Po 'lines\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "::set-output name=lines_coverage::${lines_coverage}"
+          functions_coverage=$(grep -Po 'functions\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "::set-output name=functions_coverage::${functions_coverage}"
+          branches_coverage=$(grep -Po 'branches\.*:\s*\K\d+\.\d+' coverage_summary.txt)
+          echo "::set-output name=branches_coverage::${branches_coverage}"
+
+      - id: read-summary
+        run: |
+          summary=$(<coverage_summary.txt)
+          echo "::set-output name=coverage_summary::${summary}"
+
+      - id: read-list
+        run: |
+          list=$(<coverage_list.txt)
+          echo "::set-output name=coverage_list::${list}"
+
