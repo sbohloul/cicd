@@ -85,7 +85,7 @@ jobs:
         id: read-summary
         run: |
           summary=$(cat coverage_summary.txt)      
-          echo "coverage_summary="${summary}"" >> $GITHUB_OUTPUT
+          echo "coverage_summary=${summary}" >> $GITHUB_OUTPUT
 
       - name: Output lcov list
         id: read-list
