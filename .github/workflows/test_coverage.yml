@@ -36,12 +36,6 @@ jobs:
           echo "Main branch: ${{ needs.build-coverage-main.outputs.functions_coverage }}"
           echo "Current branch: ${{ needs.build-coverage-current.outputs.functions_coverage }}"
       
-      - name: Branch coverage comparison
-        run: |
-          echo "Branch coverage comparison"
-          echo "Main branch: ${{ needs.build-coverage-main.outputs.branches_coverage }}"
-          echo "Current branch: ${{ needs.build-coverage-current.outputs.branches_coverage }}"
-
       - name: Summary comparison
         run: |
           echo "Summary comparison"

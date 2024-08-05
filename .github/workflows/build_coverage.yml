@@ -15,9 +15,6 @@ on:
       functions_coverage:
         description: 'Functions coverage percentage'
         value: ${{ jobs.outputs.functions_coverage }}
-      branches_coverage:
-        description: 'Branches coverage percentage'
-        value: ${{ jobs.outputs.branches_coverage }}
       coverage_summary:
         description: 'Coverage summary'
         value: ${{ jobs.outputs.coverage_summary }}
@@ -37,7 +34,6 @@ jobs:
     outputs:
       lines_coverage: ${{ steps.get-coverage-values.outputs.lines_coverage }}
       functions_coverage: ${{ steps.get-coverage-values.outputs.functions_coverage }}
-      branches_coverage: ${{ steps.get-coverage-values.outputs.branches_coverage }}
       coverage_summary: ${{ steps.read-summary.outputs.coverage_summary }}
       coverage_list: ${{ steps.read-list.outputs.coverage_list }}
 
@@ -82,8 +78,6 @@ jobs:
           echo "::set-output name=lines_coverage::${lines_coverage}"
           functions_coverage=$(grep -Po 'functions\.*:\s*\K\d+\.\d+' coverage_summary.txt)
           echo "::set-output name=functions_coverage::${functions_coverage}"
-          branches_coverage=$(grep -Po 'branches\.*:\s*\K\d+\.\d+' coverage_summary.txt)
-          echo "::set-output name=branches_coverage::${branches_coverage}"
 
       - id: read-summary
         run: |
