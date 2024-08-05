@@ -10,19 +10,14 @@ on:
         description: 'Branch for which to generate coverage report'
     outputs:
       lines_coverage:
-        type: string
         description: 'Lines coverage percentage'
       functions_coverage:
-        type: string
         description: 'Functions coverage percentage'
       branches_coverage:
-        type: string
         description: 'Branches coverage percentage'
       coverage_summary:
-        type: string
         description: 'Coverage summary'
       coverage_list:
-        type: string
         description: 'Coverage list'
 
 env:
