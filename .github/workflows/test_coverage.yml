@@ -37,32 +37,27 @@ jobs:
 
       - name: Construct report message
         run: |
-          echo "## Coverage Report for Commit \`${{ env.COMMIT_SHA }}\`
+          echo "## Coverage Report for Commit [${{ github.sha }}]((https://github.com/${{ github.repository }}/commit/${{ github.sha }}) during \`${{ github.event.pull_request.head.ref }}\` #${{ github.run_number }})
           - **Branch**: \`${{ github.event.pull_request.head.ref }}\`
           - **Run Number**: \`${{ github.run_number }}\`
 
-          ### Current Commit Coverage:
+          ### Current Coverage Summary:
           \`\`\`
           ${{ needs.build-coverage-current.outputs.coverage_summary }}
           \`\`\`
 
-          ### Main Branch Coverage:
+          ### Reference Coverage Summary:
           \`\`\`
           ${{ needs.build-coverage-main.outputs.coverage_summary }}
-          \`\`\`
-
-          ### Coverage Difference:
-          \`\`\`
-          ${{ env.coverage_diff }}
           \`\`\`
           " > report.txt
           
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
             echo "Coverage decreased by ${{ env.coverage_diff }}%"
-            echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
+            echo "**Coverage decreased by ${{ env.coverage_diff }}%**" >> report.txt
           else
             echo "Coverage increased by ${{ env.coverage_diff }}%"
-            echo "Coverage increased by ${{ env.coverage_diff }}%" >> report.txt
+            echo "**Coverage increased by ${{ env.coverage_diff }}%**" >> report.txt
           fi
           
       - name: Report coverage summary
