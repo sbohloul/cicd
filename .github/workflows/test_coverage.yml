@@ -37,7 +37,7 @@ jobs:
 
       - name: Construct report message
         run: |
-          echo "## Coverage Report for Commit [${{ github.sha }}]((https://github.com/${{ github.repository }}/commit/${{ github.sha }}) during \`${{ github.event.pull_request.head.ref }}\` #${{ github.run_number }})
+          echo "## Coverage Report for Commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
           - **Branch**: \`${{ github.event.pull_request.head.ref }}\`
           - **Run Number**: \`${{ github.run_number }}\`
 
