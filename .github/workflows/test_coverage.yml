@@ -37,8 +37,7 @@ jobs:
 
       - name: Construct report message
         run: |
-          cat > report.txt <<EOF
-          ## Coverage Report for Commit \`${{ env.COMMIT_SHA }}\`
+          echo "## Coverage Report for Commit \`${{ env.COMMIT_SHA }}\`
           - **Branch**: \`${{ github.event.pull_request.head.ref }}\`
           - **Run Number**: \`${{ github.run_number }}\`
 
@@ -56,7 +55,7 @@ jobs:
           \`\`\`
           ${{ env.coverage_diff }}
           \`\`\`
-          EOF
+          " > report.txt
           
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
             echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
