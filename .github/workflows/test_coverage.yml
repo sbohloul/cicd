@@ -58,11 +58,6 @@ jobs:
           " > report.txt
           
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
-            echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
-          else
-            echo "Coverage increased by ${{ env.coverage_diff }}%" >> report.txt
-          f          
-          if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
             echo "Coverage decreased by ${{ env.coverage_diff }}%"
             echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
           else
