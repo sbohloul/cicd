@@ -30,11 +30,14 @@ jobs:
       - build-coverage-current
 
     steps:
-      - name: Report coverage summary
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: coverage
-          message: |
+      - name: Calculate coverage difference
+        run: |
+          coverage_diff=$(echo "scale=2; ${{ needs.build-coverage-current.outputs.lines_coverage }} - ${{ needs.build-coverage-main.outputs.lines_coverage }}" | bc)
+          echo "coverage_diff=$coverage_diff" >> $GITHUB_ENV
+
+      - name: Construct report message
+        run: |
+          cat > report.txt <<EOF
             ## Coverage Report for Commit `${{ env.COMMIT_SHA }}`
             - **Branch**: `${{ github.event.pull_request.head.ref }}`
             - **Run Number**: `${{ github.run_number }}`
@@ -48,16 +51,32 @@ jobs:
             ```
             ${{ needs.build-coverage-main.outputs.coverage_summary }}
             ```
-      - name: Fail if coverage dropped
-        run: |
-          coverage_diff=$(echo "scale=2; ${{ needs.build-coverage-main.outputs.lines_coverage }} - ${{ needs.build-coverage-current.outputs.lines_coverage }}" | bc)
-          if (( $(echo "${{ needs.build-coverage-main.outputs.lines_coverage }} < ${{ needs.build-coverage-current.outputs.lines_coverage }}" | bc -l) )); then
-            echo "Coverage dropped from main branch by $coverage_diff"
-            exit 1
+
+            ### Coverage Difference:
+            ```
+            ${{ env.coverage_diff }}
+            ```
+            EOF
+          if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
+            echo "Coverage decreased by ${{ env.coverage_diff }}%"
+            echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
           else
-            echo "Coverage increased from main branch by $coverage_diff"
+            echo "Coverage increased by ${{ env.coverage_diff }}%"
+            echo "Coverage increased by ${{ env.coverage_diff }}%" >> report.txt
           fi
           
+      - name: Report coverage summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage
+          message: report.txt
+
+      - name: Fail if coverage is decreased
+        run: |
+          if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
+            echo "Coverage decreased by ${{ env.coverage_diff }}%"
+            exit 1
+          fi
 
       - name: Line coverage comparison
         run: |
