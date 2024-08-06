@@ -38,25 +38,31 @@ jobs:
       - name: Construct report message
         run: |
           cat > report.txt <<EOF
-            ## Coverage Report for Commit `${{ env.COMMIT_SHA }}`
-            - **Branch**: `${{ github.event.pull_request.head.ref }}`
-            - **Run Number**: `${{ github.run_number }}`
+          ## Coverage Report for Commit \`${{ env.COMMIT_SHA }}\`
+          - **Branch**: \`${{ github.event.pull_request.head.ref }}\`
+          - **Run Number**: \`${{ github.run_number }}\`
 
-            ### Current Commit Coverage:
-            ```
-            ${{ needs.build-coverage-current.outputs.coverage_summary }}
-            ```
+          ### Current Commit Coverage:
+          \`\`\`
+          ${{ needs.build-coverage-current.outputs.coverage_summary }}
+          \`\`\`
 
-            ### Main Branch Coverage:
-            ```
-            ${{ needs.build-coverage-main.outputs.coverage_summary }}
-            ```
+          ### Main Branch Coverage:
+          \`\`\`
+          ${{ needs.build-coverage-main.outputs.coverage_summary }}
+          \`\`\`
 
-            ### Coverage Difference:
-            ```
-            ${{ env.coverage_diff }}
-            ```
-            EOF
+          ### Coverage Difference:
+          \`\`\`
+          ${{ env.coverage_diff }}
+          \`\`\`
+          EOF
+          
+          if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
+            echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
+          else
+            echo "Coverage increased by ${{ env.coverage_diff }}%" >> report.txt
+          f          
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
             echo "Coverage decreased by ${{ env.coverage_diff }}%"
             echo "Coverage decreased by ${{ env.coverage_diff }}%" >> report.txt
