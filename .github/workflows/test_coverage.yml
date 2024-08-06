@@ -38,9 +38,9 @@ jobs:
       - name: Construct report message
         run: |
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
-            diff_message="**<span style=\"color:red\">Coverage decreased by ${{ env.coverage_diff }}%</span>**"
+            diff_message="**:red_circle: Coverage decreased by ${{ env.coverage_diff }}%</span>**"
           else
-            diff_message="**<span style=\"color:green\">Coverage increased by ${{ env.coverage_diff }}%</span>**"
+            diff_message="**:green_circle: Coverage increased by ${{ env.coverage_diff }}%</span>**"
           fi
 
           echo "## Coverage Report for Commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
