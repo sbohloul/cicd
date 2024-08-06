@@ -47,6 +47,8 @@ jobs:
           - **Branch**: \`${{ github.event.pull_request.head.ref }}\`
           - **Run Number**: \`${{ github.run_number }}\`
 
+          ${diff_message}
+
           ### Current Coverage Summary:
           \`\`\`
           ${{ needs.build-coverage-current.outputs.coverage_summary }}
@@ -55,9 +57,9 @@ jobs:
           <details>
             <summary>Click to see the full list</summary>
 
-            \`\`\`
-            ${{ needs.build-coverage-current.outputs.coverage_list }}
-            \`\`\`
+          \`\`\`
+          ${{ needs.build-coverage-current.outputs.coverage_list }}
+          \`\`\`
 
           </details>
 
@@ -70,13 +72,11 @@ jobs:
 
             <summary>Click to see the full list</summary>
           
-            \`\`\`
-            ${{ needs.build-coverage-main.outputs.coverage_list }}
-            \`\`\`
+          \`\`\`
+          ${{ needs.build-coverage-main.outputs.coverage_list }}
+          \`\`\`
           
           </details>
-
-          ${diff_message}
           " > report.txt
                     
       - name: Report coverage summary
