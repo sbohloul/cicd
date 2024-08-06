@@ -1,0 +1,91 @@
+name: code-coverage-report
+run-name: ${{ github.actor }} is running ${{ github.workflow }} 🚀
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  pull-requests: write
+
+jobs:
+  build-coverage-main:
+    uses: ./.github/workflows/build_coverage.yml
+    with:
+      branch: main
+  
+  build-coverage-current:
+    uses: ./.github/workflows/build_coverage.yml
+    with:
+      branch: ${{ github.refname }}
+  
+  report-coverage:
+    runs-on: ubuntu-latest
+    needs: 
+      - build-coverage-main
+      - build-coverage-current
+
+    steps:
+      - name: Calculate coverage difference
+        run: |
+          coverage_diff=$(echo "scale=2; ${{ needs.build-coverage-current.outputs.lines_coverage }} - ${{ needs.build-coverage-main.outputs.lines_coverage }}" | bc)
+          echo "coverage_diff=$coverage_diff" >> $GITHUB_ENV
+
+      - name: Construct report message
+        run: |
+          if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
+            diff_message="**:red_circle: Coverage decreased by ${{ env.coverage_diff }}%</span>**"
+          else
+            diff_message="**:green_circle: Coverage increased by ${{ env.coverage_diff }}%</span>**"
+          fi
+
+          echo "## Coverage report for commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) during [\`${{ github.event.pull_request.head.ref }}\`](https://github.com/${{ github.repository }}/tree/${{ github.event.pull_request.head.ref }}) [#${{ github.run_number }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          ${diff_message}
+
+          ### Current Coverage Summary:
+          \`\`\`
+          ${{ needs.build-coverage-current.outputs.coverage_summary }}
+          \`\`\`
+
+          <details>
+            <summary>Click to see the full list</summary>
+
+          \`\`\`
+          ${{ needs.build-coverage-current.outputs.coverage_list }}
+          \`\`\`
+
+          </details>
+
+          ### Reference Coverage Summary:
+          \`\`\`
+          ${{ needs.build-coverage-main.outputs.coverage_summary }}
+          \`\`\`
+
+          <details>
+
+            <summary>Click to see the full list</summary>
+          
+          \`\`\`
+          ${{ needs.build-coverage-main.outputs.coverage_list }}
+          \`\`\`
+          
+          </details>
+          " > report.txt
+                    
+      - name: Report coverage summary
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage
+          path: report.txt
+          
+      - name: Fail if coverage is decreased
+        run: |
+          if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
+            echo "Coverage decreased by ${{ env.coverage_diff }}%"
+            exit 1
+          fi
