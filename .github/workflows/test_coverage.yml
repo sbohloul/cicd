@@ -44,8 +44,6 @@ jobs:
           fi
 
           echo "## Coverage report for commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) during [\`${{ github.event.pull_request.head.ref }}\`](https://github.com/${{ github.repository }}/tree/${{ github.event.pull_request.head.ref }}) [#${{ github.run_number }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          - **Branch**: \`${{ github.event.pull_request.head.ref }}\`
-          - **Run Number**: \`${{ github.run_number }}\`
 
           ${diff_message}
 
