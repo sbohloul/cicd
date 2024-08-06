@@ -89,30 +89,3 @@ jobs:
             echo "Coverage decreased by ${{ env.coverage_diff }}%"
             exit 1
           fi
-
-      - name: Line coverage comparison
-        run: |
-          echo "Line coverage comparison"
-          echo "Main branch: ${{ needs.build-coverage-main.outputs.lines_coverage }}"
-          echo "Current branch: ${{ needs.build-coverage-current.outputs.lines_coverage }}"
-      
-      - name: Function coverage comparison
-        run: |
-          echo "Function coverage comparison"
-          echo "Main branch: ${{ needs.build-coverage-main.outputs.functions_coverage }}"
-          echo "Current branch: ${{ needs.build-coverage-current.outputs.functions_coverage }}"
-      
-      - name: Summary comparison
-        run: |
-          echo "Summary comparison"
-          echo "Main branch: ${{ needs.build-coverage-main.outputs.coverage_summary }}"
-          echo "Current branch: ${{ needs.build-coverage-current.outputs.coverage_summary }}"
-
-      - name: List comparison
-        run: |
-          echo "List comparison"
-          echo "Main branch: ${{ needs.build-coverage-main.outputs.coverage_list }}"
-          echo "Current branch: ${{ needs.build-coverage-current.outputs.coverage_list }}"
-    
-
-
