@@ -69,8 +69,8 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: coverage
-          message: report.txt
-
+          path: report.txt
+          
       - name: Fail if coverage is decreased
         run: |
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
