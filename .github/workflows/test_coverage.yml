@@ -35,14 +35,25 @@ jobs:
         with:
           header: coverage
           message: |
-            "Current branch coverage report"
+            ## Coverage Report for Commit `${{ env.COMMIT_SHA }}`
+            - **Branch**: `${{ github.event.pull_request.head.ref }}`
+            - **Run Number**: `${{ github.run_number }}`
+
+            ### Current Commit Coverage:
             ```
             ${{ needs.build-coverage-current.outputs.coverage_summary }}
             ```
-            "Main branch coverage report"
+
+            ### Main Branch Coverage:
             ```
             ${{ needs.build-coverage-main.outputs.coverage_summary }}
             ```
+      - name: Fail if coverage dropped
+        if: ${{ needs.build-coverage-current.outputs.lines_coverage < needs.build-coverage-main.outputs.lines_coverage }}
+        run: |
+          coverage_diff=$(echo "scale=2; ${{ needs.build-coverage-main.outputs.lines_coverage }} - ${{ needs.build-coverage-current.outputs.lines_coverage }}" | bc)
+          echo "Coverage dropped from main branch by $coverage_diff%"
+          exit 0
 
       - name: Line coverage comparison
         run: |
