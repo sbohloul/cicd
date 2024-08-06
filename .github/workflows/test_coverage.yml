@@ -47,10 +47,12 @@ jobs:
           \`\`\`
 
           <details>
-          <summary>Click to see the full list</summary>
-          \`\`\`
-          ${{ needs.build-coverage-current.outputs.coverage_list }}
-          \`\`\`
+            <summary>Click to see the full list</summary>
+
+            \`\`\`
+            ${{ needs.build-coverage-current.outputs.coverage_list }}
+            \`\`\`
+
           </details>
 
           ### Reference Coverage Summary:
@@ -59,19 +61,22 @@ jobs:
           \`\`\`
 
           <details>
-          <summary>Click to see the full list</summary>
-          \`\`\`
-          ${{ needs.build-coverage-main.outputs.coverage_list }}
-          \`\`\`
+
+            <summary>Click to see the full list</summary>
+          
+            \`\`\`
+            ${{ needs.build-coverage-main.outputs.coverage_list }}
+            \`\`\`
+          
           </details>
           " > report.txt
           
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
             echo "Coverage decreased by ${{ env.coverage_diff }}%"
-            echo "**Coverage decreased by ${{ env.coverage_diff }}%**" >> report.txt
+            echo "**<span style=\"color:red">Coverage decreased by ${{ env.coverage_diff }}%<\span>**" >> report.txt
           else
             echo "Coverage increased by ${{ env.coverage_diff }}%"
-            echo "**Coverage increased by ${{ env.coverage_diff }}%**" >> report.txt
+            echo "**<span style=\"color:green">Coverage increased by ${{ env.coverage_diff }}%<\span>**" >> report.txt
           fi
           
       - name: Report coverage summary
