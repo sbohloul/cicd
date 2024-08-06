@@ -49,11 +49,15 @@ jobs:
             ${{ needs.build-coverage-main.outputs.coverage_summary }}
             ```
       - name: Fail if coverage dropped
-        if: ${{ needs.build-coverage-current.outputs.lines_coverage }} < ${{ needs.build-coverage-main.outputs.lines_coverage }}
         run: |
           coverage_diff=$(echo "scale=2; ${{ needs.build-coverage-main.outputs.lines_coverage }} - ${{ needs.build-coverage-current.outputs.lines_coverage }}" | bc)
-          echo "Coverage dropped from main branch by $coverage_diff%"
-          exit 1
+          if (( $(echo "${{ needs.build-coverage-main.outputs.lines_coverage }} < ${{ needs.build-coverage-current.outputs.lines_coverage }}" | bc -l) )); then
+            echo "Coverage dropped from main branch by $coverage_diff"
+            exit 1
+          else
+            echo "Coverage increased from main branch by $coverage_diff"
+          fi
+          
 
       - name: Line coverage comparison
         run: |
