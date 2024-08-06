@@ -46,10 +46,24 @@ jobs:
           ${{ needs.build-coverage-current.outputs.coverage_summary }}
           \`\`\`
 
+          <details>
+          <summary>Click to see the full list</summary>
+          \`\`\`
+          ${{ needs.build-coverage-current.outputs.coverage_list }}
+          \`\`\`
+          </details>
+
           ### Reference Coverage Summary:
           \`\`\`
           ${{ needs.build-coverage-main.outputs.coverage_summary }}
           \`\`\`
+
+          <details>
+          <summary>Click to see the full list</summary>
+          \`\`\`
+          ${{ needs.build-coverage-main.outputs.coverage_list }}
+          \`\`\`
+          </details>
           " > report.txt
           
           if (( $(echo "${{ env.coverage_diff }} < 0" | bc -l) )); then
